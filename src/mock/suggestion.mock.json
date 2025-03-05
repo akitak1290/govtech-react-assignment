@@ -1,0 +1,24 @@
+{
+    "suggestions": {
+        "baby bonus": 0.5,
+        "baby support grant": 0.4,
+        "baby bonus account services": 0.3,
+        "baby bonus application status": 0.37,
+        "baby bonus cash gift": 0.38,
+        "baby bonus eligibility": 0.39,
+        "care for a new baby": 0.34,
+        "care for a child": 0.23,
+        "child care and kindergartens": 0.26,
+        "childcare and preschool": 0.28,
+        "government-paid childcare": 0.25,
+        "infant care": 0.16,
+        "infant and child care": 0.17,
+        "preschool enrolment": 0.92
+    },
+    "synonyms": {
+        "infant": ["child", "baby"],
+        "child": ["infant", "baby"],
+        "preschool": ["childcare"],
+        "childcare": ["preschool"]
+    }
+}
