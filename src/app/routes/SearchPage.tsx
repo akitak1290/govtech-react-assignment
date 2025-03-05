@@ -1,4 +1,4 @@
-import Search from "@/features/search/Search";
+import Search from "@/features/search/SearchContainer";
 
 function SearchPage() {
   return (
