@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import useFetchSuggestionResult, {
   fetchSuggestionResult,
 } from "./getSuggestionResult";
@@ -122,6 +122,48 @@ describe("useFetchSuggestionResult", () => {
       expect(result.current.data).toBeNull();
       expect(result.current.error).toBe("Network error");
       expect(result.current.loading).toBe(false);
+    });
+  });
+
+  it("debounce search input", async () => {
+    jest.useFakeTimers();
+    const mockResponse = {
+      suggestions: {
+        "apple bee": 1,
+        banana: 2,
+        "apple bee fox": 3,
+        blueberry: 4,
+        apple: 100,
+      },
+      synonyms: { apple: "red slightly round fruit" },
+    };
+
+    (fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue(mockResponse),
+    });
+
+    const { result, rerender } = renderHook(
+      ({ search }) => useFetchSuggestionResult(search),
+      {
+        initialProps: { search: "app" },
+      }
+    );
+    expect(result.current.data).toBeNull();
+
+    rerender({ search: "apple" });
+    expect(result.current.data).toBeNull();
+
+    act(() => {
+      jest.advanceTimersByTime(300);
+    });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual([
+        "apple",
+        "apple bee fox",
+        "apple bee",
+      ]);
     });
   });
 });

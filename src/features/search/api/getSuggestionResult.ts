@@ -53,19 +53,29 @@ export default function useFetchSuggestionResult(searchString: string) {
   const [loading, setLoading] = useState(false);
   const { error, setError, clearError } = useError();
 
+  const [searchStringDebounced, setSearchStringDebounced] =
+    useState(searchString);
+
   useEffect(() => {
-    if (!searchString || searchString.length < 3) {
+    const timerId = setTimeout(() => {
+      setSearchStringDebounced(searchString);
+    }, 200);
+
+    return () => clearTimeout(timerId);
+  }, [searchString]);
+
+  useEffect(() => {
+    if (!searchStringDebounced || searchStringDebounced.length < 3) {
       setData(null);
       clearError();
       return;
     }
 
     const getData = async function () {
-      setData(null);
       clearError();
       setLoading(true);
 
-      const { data, error } = await fetchSuggestionResult(searchString);
+      const { data, error } = await fetchSuggestionResult(searchStringDebounced);
       if (error) {
         setError(error);
       } else {
@@ -75,7 +85,7 @@ export default function useFetchSuggestionResult(searchString: string) {
     };
 
     getData();
-  }, [searchString, setError, clearError]);
+  }, [searchStringDebounced, setError, clearError]);
 
   return { data, loading, error };
 }
