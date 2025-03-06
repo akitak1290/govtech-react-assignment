@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import SearchIcon from "./SearchIcon";
-import useFetchSuggestionResult from "../api/getSuggestion";
+import useFetchSuggestionResult from "../api/getSuggestionResult";
 import Spinner from "@/components/Spinner";
 
 type PropType = {
@@ -16,6 +16,7 @@ function SearchInput(props: PropType) {
 
   const [showTypeahead, setShowTypeahead] = useState(true);
   const [searchString, setSearchString] = useState("");
+  const [suggestionIndex, setSuggestionIndex] = useState(-1);
 
   const { data: suggestions, loading } = useFetchSuggestionResult(searchString);
 
@@ -23,6 +24,43 @@ function SearchInput(props: PropType) {
     setSearchString(e.target.value);
 
     if (suggestions) setShowTypeahead(true);
+  };
+
+  const onKeyDown = function (e: React.KeyboardEvent<HTMLElement>) {
+    switch (e.key) {
+      case "ArrowUp":
+        if (!suggestions) return;
+
+        if (suggestionIndex === -1) {
+          setSuggestionIndex(suggestions.length - 1);
+        } else {
+          setSuggestionIndex((prev) => prev - 1);
+        }
+        break;
+      case "ArrowDown":
+        if (!suggestions) return;
+
+        if (suggestionIndex === suggestions.length - 1) {
+          setSuggestionIndex(-1);
+        } else {
+          setSuggestionIndex((prev) => prev + 1);
+        }
+        break;
+
+      case "Enter":
+        if (!searchString) return;
+
+        if (suggestions && suggestionIndex !== -1) {
+          onClickSuggestion(suggestions[suggestionIndex]);
+          return;
+        }
+
+        setShowTypeahead(false);
+        onSubmitProp(searchString);
+        break;
+      default:
+        break;
+    }
   };
 
   const handleClearInput = function () {
@@ -42,6 +80,7 @@ function SearchInput(props: PropType) {
       className="flex w-full relative"
       onSubmit={(e) => {
         e.preventDefault();
+        setShowTypeahead(false);
         onSubmitProp(searchString);
       }}
     >
@@ -51,6 +90,7 @@ function SearchInput(props: PropType) {
           ref={inputRef}
           value={searchString}
           onChange={onInputChange}
+          onKeyDown={onKeyDown}
         />
         {searchString.length > 0 && (
           <button
@@ -72,8 +112,11 @@ function SearchInput(props: PropType) {
             {suggestions.map((suggestion, index) => (
               <li
                 key={index}
-                className="px-4 py-3 hover:bg-blue-100 cursor-pointer"
+                className={`px-4 py-3 cursor-pointer ${
+                  index === suggestionIndex ? "bg-blue-100" : ""
+                }`}
                 onClick={() => onClickSuggestion(suggestion)}
+                onMouseOver={() => setSuggestionIndex(index)}
               >
                 {suggestion}
               </li>
