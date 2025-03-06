@@ -110,7 +110,7 @@ function SearchInput(props: PropType) {
         )}
         {showTypeahead && suggestions && (
           <ul className="absolute w-full z-10 mt-1 bg-white rounded-b-xl shadow-md">
-            {suggestions.map((suggestion, index) => (
+            {suggestions.slice(0, 6).map((suggestion, index) => (
               <li
                 key={index}
                 className={`px-4 py-3 cursor-pointer ${

@@ -41,6 +41,6 @@ export interface SuggestionResult {
 }
 
 export interface SuggestionResultWrapper {
-  data: SuggestionResult | null;
+  data: string[] | null;
   error: string | null;
 }

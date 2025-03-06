@@ -1,23 +1,49 @@
-import { SuggestionResult, SuggestionResultWrapper } from "@/utils/interface";
 import { useEffect, useState } from "react";
+
+import { suggestionEndpoint as mockSuggestionEndpoint } from "@/mock/api.mock";
+import { SuggestionResult, SuggestionResultWrapper } from "@/utils/interface";
+
+const suggestionEndpoint = mockSuggestionEndpoint;
 
 export async function fetchSuggestionResult(
   searchString: string
 ): Promise<SuggestionResultWrapper> {
-  const mock = {
-    suggestions: {
-      "Lorem ipsum odor amet": 1,
-      "Consectetuer adipiscing elit": 1,
-      "Tempus rhoncus elit aenean": 1,
-      child: 1,
-    },
-    synonyms: {},
-  };
+  try {
+    const response = await fetch(suggestionEndpoint);
 
-  return {
-    data: mock,
-    error: null,
-  };
+    if (!response.ok) {
+      return {
+        data: null,
+        error: `Failed to retrieve data from server, got code ${response.status}`,
+      };
+    }
+
+    const data: SuggestionResult = await response.json();
+
+    if (Object.keys(data).length === 0) {
+      return {
+        data: null,
+        error: `No data found for ${searchString}`,
+      };
+    }
+
+    const searchWords = searchString.trim().split(/\s+/g);
+    let suggestions = Object.keys(data.suggestions);
+    suggestions = suggestions.filter((suggestion) =>
+      searchWords.every((word) => suggestion.toLowerCase().includes(word))
+    );
+    suggestions.sort((a, b) => data.suggestions[b] - data.suggestions[a]);
+
+    return {
+      data: suggestions,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: (error as Error).message,
+    };
+  }
 }
 
 export default function useFetchSuggestionResult(searchString: string) {
@@ -41,7 +67,7 @@ export default function useFetchSuggestionResult(searchString: string) {
       if (error) {
         setError(error);
       } else {
-        setData(Object.keys(data!.suggestions));
+        setData(data);
       }
       setLoading(false);
     };
