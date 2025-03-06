@@ -45,7 +45,7 @@ function SearchInput(props: PropType) {
       }}
     >
       <div className="relative grow">
-        <Input ref={inputRef} value={searchString} onChange={onInputChange} />
+        <Input aria-label="search-input" ref={inputRef} value={searchString} onChange={onInputChange} />
         {searchString.length > 0 && (
           <button
             type="button"
