@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
 import { queryResultEndpoint as mockQueryREsultEndpoint } from "@/mock/api.mock";
-import { QueryResult, QueryResultWrapper } from "@utils/interface";
+import { QueryResult, QueryResultWrapper } from "@/utils/interface";
 import { filterQueryResult } from "@/mock/filter.mock";
-import { FETCH_NO_DATA_FOUND, FETCH_RETURN_NOT_OK } from "@utils/constant";
+import { FETCH_NO_DATA_FOUND, FETCH_RETURN_NOT_OK } from "@/utils/constant";
 
 const queryResultEndpoint = mockQueryREsultEndpoint;
 

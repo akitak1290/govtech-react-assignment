@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { suggestionEndpoint as mockSuggestionEndpoint } from "@/mock/api.mock";
 import { SuggestionResult, SuggestionResultWrapper } from "@/utils/interface";
-import { FETCH_NO_DATA_FOUND, FETCH_RETURN_NOT_OK } from "@utils/constant";
+import { FETCH_NO_DATA_FOUND, FETCH_RETURN_NOT_OK } from "@/utils/constant";
 
 const suggestionEndpoint = mockSuggestionEndpoint;
 

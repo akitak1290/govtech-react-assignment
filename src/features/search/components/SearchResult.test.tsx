@@ -1,7 +1,8 @@
 import { render } from "@testing-library/react";
 
-import SearchResult, { parseHighlightText } from "./SearchResult";
+import SearchResult from "./SearchResult";
 import mockJson from "@/mock/queryResult.mock.json";
+import { parseHighlightText } from "../utils/parseHighlight";
 
 describe(SearchResult, () => {
   it("parseHighlightText()", async () => {
