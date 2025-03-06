@@ -1,7 +1,26 @@
-import { useMemo } from "react";
+import { JSX } from "react";
 
-import json from "@/mock/queryResult.mock.json";
-import { QueryResult } from "@utils/interface";
+import { DocumentText } from "@utils/interface";
+import { useFetchQueryResult } from "../api/getQueryResult";
+import Spinner from "@/components/Spinner";
+
+export function parseHighlightText(documentText: DocumentText) {
+  const text = documentText.Text;
+  const parsedText: (string | JSX.Element)[] = [];
+
+  let cur = 0;
+  documentText.Highlights.forEach((highlight) => {
+    parsedText.push(text.substring(cur, highlight.BeginOffset));
+    parsedText.push(
+      <b>{text.substring(highlight.BeginOffset, highlight.EndOffset)}</b>
+    );
+    cur = highlight.EndOffset;
+  });
+
+  if (cur < text.length) parsedText.push(text.substring(cur));
+
+  return <p>{...parsedText}</p>;
+}
 
 type PropType = {
   searchString: string;
@@ -9,21 +28,16 @@ type PropType = {
 
 function SearchResult(props: PropType) {
   const { searchString } = props;
-
-  // TODO: mock, replace later
-  const data: QueryResult | null = useMemo(
-    () =>
-      searchString && searchString.length > 0
-        ? {
-            ...json,
-            suggestions: json.ResultItems.slice(0, 2),
-          }
-        : null,
-    [searchString]
-  );
+  const { data, loading, error } = useFetchQueryResult(searchString);
 
   return (
     <>
+      {error && <span className="w-full flex justify-center">{error}</span>}
+      {loading && (
+        <span className="w-full flex justify-center">
+          <Spinner />
+        </span>
+      )}
       {data && (
         <div>
           <p className="pb-14 text-xl font-medium">
@@ -38,9 +52,9 @@ function SearchResult(props: PropType) {
                   href={result.DocumentURI}
                   target="_blank"
                 >
-                  {result.DocumentTitle.Text}
+                  {parseHighlightText(result.DocumentTitle)}
                 </a>
-                <p>{result.DocumentExcerpt.Text}</p>
+                <span>{parseHighlightText(result.DocumentExcerpt)}</span>
                 <a
                   className="text-[#686868]"
                   target="_blank"

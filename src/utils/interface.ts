@@ -3,7 +3,7 @@ interface Highlight {
   EndOffset: number;
 }
 
-interface DocumentText {
+export interface DocumentText {
   Text: string;
   Highlights: Highlight[];
 }
@@ -20,6 +20,11 @@ export interface QueryResult {
   Page: number;
   PageSize: number;
   ResultItems: QueryResultItem[];
+}
+
+export interface QueryResultWrapper {
+  data: QueryResult | null;
+  error: string | null;
 }
 
 interface Suggestion {
