@@ -39,3 +39,8 @@ export interface SuggestionResult {
   suggestions: Suggestion;
   synonyms: Synonym;
 }
+
+export interface SuggestionResultWrapper {
+  data: string[] | null;
+  error: string | null;
+}
