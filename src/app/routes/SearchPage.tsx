@@ -1,8 +1,11 @@
 import Search from "@/features/search/SearchContainer";
+import ErrorBoundary from "@/features/errorBoundary/ErrorBoundary";
 
 function SearchPage() {
   return (
-    <Search />
+    <ErrorBoundary>
+      <Search />
+    </ErrorBoundary>
   );
 }
 
