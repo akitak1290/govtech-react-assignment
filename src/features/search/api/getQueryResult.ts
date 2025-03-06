@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 
 import { queryResultEndpoint as mockQueryREsultEndpoint } from "@/mock/api.mock";
-import { QueryResult, QueryResultWrapper } from "@utils/interface";
+import { QueryResult, QueryResultWrapper } from "@/utils/interface";
 import { filterQueryResult } from "@/mock/filter.mock";
+import { FETCH_NO_DATA_FOUND, FETCH_RETURN_NOT_OK } from "@/utils/constant";
 
 const queryResultEndpoint = mockQueryREsultEndpoint;
 
@@ -15,7 +16,7 @@ export async function fetchQueryResult(
     if (!response.ok) {
       return {
         data: null,
-        error: `Failed to retrieve data from server, got code ${response.status}`,
+        error: `${FETCH_RETURN_NOT_OK}, got code ${response.status}`,
       };
     }
 
@@ -24,7 +25,7 @@ export async function fetchQueryResult(
     if (Object.keys(data).length === 0) {
       return {
         data: null,
-        error: `No data found for ${searchString}`,
+        error: `${FETCH_NO_DATA_FOUND} for ${searchString}`,
       };
     }
 
@@ -33,7 +34,7 @@ export async function fetchQueryResult(
     if (!filteredData) {
       return {
         data: null,
-        error: `No data found for ${searchString}`,
+        error: `${FETCH_NO_DATA_FOUND} for ${searchString}`,
       };
     }
 
