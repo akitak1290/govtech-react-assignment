@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { suggestionEndpoint as mockSuggestionEndpoint } from "@/mock/api.mock";
 import { SuggestionResult, SuggestionResultWrapper } from "@/utils/interface";
+import { FETCH_NO_DATA_FOUND, FETCH_RETURN_NOT_OK } from "@utils/constant";
 
 const suggestionEndpoint = mockSuggestionEndpoint;
 
@@ -14,7 +15,7 @@ export async function fetchSuggestionResult(
     if (!response.ok) {
       return {
         data: null,
-        error: `Failed to retrieve data from server, got code ${response.status}`,
+        error: `${FETCH_RETURN_NOT_OK}, got code ${response.status}`,
       };
     }
 
@@ -23,7 +24,7 @@ export async function fetchSuggestionResult(
     if (Object.keys(data).length === 0) {
       return {
         data: null,
-        error: `No data found for ${searchString}`,
+        error: `${FETCH_NO_DATA_FOUND} for ${searchString}`,
       };
     }
 
