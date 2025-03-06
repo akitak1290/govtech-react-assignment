@@ -22,6 +22,7 @@ function SearchInput(props: PropType) {
 
   const onInputChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     setSearchString(e.target.value);
+    setSuggestionIndex(-1);
 
     if (suggestions) setShowTypeahead(true);
   };
