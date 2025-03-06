@@ -54,7 +54,7 @@ function SearchResult(props: PropType) {
                 >
                   {parseHighlightText(result.DocumentTitle)}
                 </a>
-                <p>{parseHighlightText(result.DocumentExcerpt)}</p>
+                <span>{parseHighlightText(result.DocumentExcerpt)}</span>
                 <a
                   className="text-[#686868]"
                   target="_blank"

@@ -116,6 +116,15 @@ describe("fetchQueryResult", () => {
     expect(result.data).toBeNull();
     expect(result.error).toBe("Network error");
   });
+
+  it("should return proper error message when no data is found", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({ok: true, json: jest.fn().mockResolvedValue({})});
+
+    const result = await fetchQueryResult("test");
+
+    expect(result.data).toBeNull();
+    expect(result.error).toBe("No data found for test");
+  })
 });
 
 describe("useFetchQueryResult", () => {

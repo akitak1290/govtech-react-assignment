@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import { queryResultEndpoint as mockQueryREsultEndpoint } from "@/mock/api.mock";
 import { QueryResult, QueryResultWrapper } from "@utils/interface";
+import { filterQueryResult } from "@/mock/filter.mock";
 
 const queryResultEndpoint = mockQueryREsultEndpoint;
 
@@ -19,8 +20,25 @@ export async function fetchQueryResult(
     }
 
     const data: QueryResult = await response.json();
+
+    if (Object.keys(data).length === 0) {
+      return {
+        data: null,
+        error: `No data found for ${searchString}`,
+      };
+    }
+
+    const filteredData = filterQueryResult(data, searchString);
+
+    if (!filteredData) {
+      return {
+        data: null,
+        error: `No data found for ${searchString}`,
+      };
+    }
+
     return {
-      data,
+      data: filteredData,
       error: null,
     };
   } catch (error) {
@@ -45,7 +63,9 @@ export function useFetchQueryResult(searchString: string) {
 
     const getData = async function () {
       setError(null);
+      setData(null);
       setLoading(true);
+
       const { data, error } = await fetchQueryResult(searchString);
       if (error) {
         setError(error);
