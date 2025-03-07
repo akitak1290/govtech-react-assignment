@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import SearchIcon from "./SearchIcon";
 import useFetchSuggestionResult from "../api/getSuggestionResult";
 import Spinner from "@/components/Spinner";
+import { highlightSuggestion } from "../utils/parseHighlight";
 
 type PropType = {
   onSubmit: (newSearchString: string) => void;
@@ -17,6 +18,8 @@ function SearchInput(props: PropType) {
   const [showTypeahead, setShowTypeahead] = useState(true);
   const [searchString, setSearchString] = useState("");
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
+
+  const [isFocus, setIsFocus] = useState(false);
 
   const { data: suggestions, loading } = useFetchSuggestionResult(searchString);
 
@@ -92,11 +95,14 @@ function SearchInput(props: PropType) {
           value={searchString}
           onChange={onInputChange}
           onKeyDown={onKeyDown}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          className="rounded-r-none"
         />
         {searchString.length > 0 && (
           <button
             type="button"
-            className="absolute inset-y-0 right-4 flex items-center justify-center cursor-pointer"
+            className="absolute inset-y-0 right-0 flex items-center justify-center cursor-pointer px-5 my-[1px] hover:bg-gray-100"
             onClick={handleClearInput}
             aria-label="clear-input-button"
           >
@@ -104,7 +110,7 @@ function SearchInput(props: PropType) {
           </button>
         )}
         {loading && (
-          <span className="absolute inset-y-0 right-9 flex items-center justify-center">
+          <span className="absolute inset-y-0 right-12 flex items-center justify-center">
             <Spinner />
           </span>
         )}
@@ -119,13 +125,18 @@ function SearchInput(props: PropType) {
                 onClick={() => onClickSuggestion(suggestion)}
                 onMouseOver={() => setSuggestionIndex(index)}
               >
-                {suggestion}
+                {highlightSuggestion(suggestion, searchString)}
               </li>
             ))}
           </ul>
         )}
       </div>
-      <Button type="submit">
+      <Button
+        type="submit"
+        className={`rounded-l-none ${
+          isFocus ? "ring-1 ring-blue-500 border-blue-500 outline-none" : ""
+        }`}
+      >
         <SearchIcon />
         Search
       </Button>

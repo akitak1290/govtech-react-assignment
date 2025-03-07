@@ -1,6 +1,6 @@
 import Spinner from "@/components/Spinner";
 import { useFetchQueryResult } from "../api/getQueryResult";
-import { parseHighlightText } from "../utils/parseHighlight";
+import { highlightQueryResult } from "../utils/parseHighlight";
 
 type PropType = {
   searchString: string;
@@ -12,7 +12,7 @@ function SearchResult(props: PropType) {
 
   return (
     <>
-      {error && <span className="w-full flex justify-center">{error}</span>}
+      {error && <span aria-label="search-result-error" className="w-full flex justify-center">{error}</span>}
       {loading && (
         <span className="w-full flex justify-center">
           <Spinner />
@@ -26,17 +26,17 @@ function SearchResult(props: PropType) {
           </p>
           <ul>
             {data.ResultItems.map((result, index) => (
-              <li key={index} className="mb-12 *:my-3">
+              <li key={index} aria-label="search-result-item" className="mb-12 *:my-3">
                 <a
                   className="text-[#1C76D5] text-xl font-medium"
                   href={result.DocumentURI}
                   target="_blank"
                 >
-                  {parseHighlightText(result.DocumentTitle)}
+                  {highlightQueryResult(result.DocumentTitle)}
                 </a>
-                <span>{parseHighlightText(result.DocumentExcerpt)}</span>
+                <span>{highlightQueryResult(result.DocumentExcerpt)}</span>
                 <a
-                  className="text-[#686868]"
+                  className="text-[#686868] break-all sm:break-normal"
                   target="_blank"
                   href={result.DocumentURI}
                 >

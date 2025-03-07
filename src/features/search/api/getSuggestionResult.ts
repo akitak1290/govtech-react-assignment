@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { suggestionEndpoint as mockSuggestionEndpoint } from "@/mock/api.mock";
 import { SuggestionResult, SuggestionResultWrapper } from "@/utils/interface";
 import { FETCH_NO_DATA_FOUND, FETCH_RETURN_NOT_OK } from "@/utils/constant";
+import { useError } from "@/hooks/useError";
 
 const suggestionEndpoint = mockSuggestionEndpoint;
 
@@ -50,21 +51,31 @@ export async function fetchSuggestionResult(
 export default function useFetchSuggestionResult(searchString: string) {
   const [data, setData] = useState<string[] | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { error, setError, clearError } = useError();
+
+  const [searchStringDebounced, setSearchStringDebounced] =
+    useState(searchString);
 
   useEffect(() => {
-    if (!searchString || searchString.length < 3) {
+    const timerId = setTimeout(() => {
+      setSearchStringDebounced(searchString);
+    }, 200);
+
+    return () => clearTimeout(timerId);
+  }, [searchString]);
+
+  useEffect(() => {
+    if (!searchStringDebounced || searchStringDebounced.length < 3) {
       setData(null);
-      setError(null);
+      clearError();
       return;
     }
 
     const getData = async function () {
-      setData(null);
-      setError(null);
+      clearError();
       setLoading(true);
 
-      const { data, error } = await fetchSuggestionResult(searchString);
+      const { data, error } = await fetchSuggestionResult(searchStringDebounced);
       if (error) {
         setError(error);
       } else {
@@ -74,7 +85,7 @@ export default function useFetchSuggestionResult(searchString: string) {
     };
 
     getData();
-  }, [searchString]);
+  }, [searchStringDebounced, setError, clearError]);
 
   return { data, loading, error };
 }

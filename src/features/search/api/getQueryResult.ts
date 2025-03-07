@@ -4,6 +4,7 @@ import { queryResultEndpoint as mockQueryREsultEndpoint } from "@/mock/api.mock"
 import { QueryResult, QueryResultWrapper } from "@/utils/interface";
 import { filterQueryResult } from "@/mock/filter.mock";
 import { FETCH_NO_DATA_FOUND, FETCH_RETURN_NOT_OK } from "@/utils/constant";
+import { useError } from "@/hooks/useError";
 
 const queryResultEndpoint = mockQueryREsultEndpoint;
 
@@ -43,9 +44,19 @@ export async function fetchQueryResult(
       error: null,
     };
   } catch (error) {
+    let customError: null | string = "Failed to fetch";
+    if (
+      (error as Error).name === "TypeError" &&
+      (error as Error).message === "Failed to fetch"
+    ) {
+      customError =
+        "❌ Network error: Check your internet connection or CORS policy.";
+    } else {
+      customError = "❌ Fetch error";
+    }
     return {
       data: null,
-      error: (error as Error).message,
+      error: customError,
     };
   }
 }
@@ -53,17 +64,17 @@ export async function fetchQueryResult(
 export function useFetchQueryResult(searchString: string) {
   const [data, setData] = useState<QueryResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { error, setError, clearError } = useError();
 
   useEffect(() => {
     if (!searchString) {
       setData(null);
-      setError(null);
+      clearError();
       return;
     }
 
     const getData = async function () {
-      setError(null);
+      clearError();
       setData(null);
       setLoading(true);
 
@@ -78,7 +89,7 @@ export function useFetchQueryResult(searchString: string) {
     };
 
     getData();
-  }, [searchString]);
+  }, [searchString, setError, clearError]);
 
   return { data, loading, error };
 }
