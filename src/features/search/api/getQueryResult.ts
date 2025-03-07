@@ -44,9 +44,19 @@ export async function fetchQueryResult(
       error: null,
     };
   } catch (error) {
+    let customError: null | string = "Failed to fetch";
+    if (
+      (error as Error).name === "TypeError" &&
+      (error as Error).message === "Failed to fetch"
+    ) {
+      customError =
+        "❌ Network error: Check your internet connection or CORS policy.";
+    } else {
+      customError = "❌ Fetch error";
+    }
     return {
       data: null,
-      error: (error as Error).message,
+      error: customError,
     };
   }
 }

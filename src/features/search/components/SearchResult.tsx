@@ -36,7 +36,7 @@ function SearchResult(props: PropType) {
                 </a>
                 <span>{highlightQueryResult(result.DocumentExcerpt)}</span>
                 <a
-                  className="text-[#686868]"
+                  className="text-[#686868] break-all sm:break-normal"
                   target="_blank"
                   href={result.DocumentURI}
                 >

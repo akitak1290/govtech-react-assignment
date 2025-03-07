@@ -24,7 +24,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   render() {
     if (this.state.hasError) {
-      // error component
       return (
         <div className="flex flex-col items-center py-10 gap-4">
             <p>Something broke here, try restarting the page :(</p>

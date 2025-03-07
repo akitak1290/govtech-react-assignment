@@ -110,11 +110,9 @@ describe("fetchQueryResult", () => {
   });
 
   it("should handle fetch exceptions", async () => {
-    (fetch as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
-
     const result = await fetchQueryResult("test");
     expect(result.data).toBeNull();
-    expect(result.error).toBe("Network error");
+    expect(result.error).toBe("❌ Fetch error");
   });
 
   it("should return proper error message when no data is found", async () => {
