@@ -101,7 +101,7 @@ function SearchInput(props: PropType) {
         {searchString.length > 0 && (
           <button
             type="button"
-            className="absolute inset-y-0 right-4 flex items-center justify-center cursor-pointer"
+            className="absolute inset-y-0 right-0 flex items-center justify-center cursor-pointer px-5 my-[1px] hover:bg-gray-100"
             onClick={handleClearInput}
             aria-label="clear-input-button"
           >
