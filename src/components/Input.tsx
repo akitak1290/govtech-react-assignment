@@ -13,13 +13,14 @@ const Input = forwardRef(function Input(
   props: InputProps,
   ref: React.Ref<HTMLInputElement | null>
 ) {
+  const { label, className, ...rest } = props;
   return (
     <>
-      {props.label && <label>{props.label}</label>}
+      {label && <label>{label}</label>}
       <input
-        className="w-full h-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 pr-10"
+        className={`w-full h-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 pr-10 ${className ?? ""}`}
         ref={ref}
-        {...props}
+        {...rest}
       />
     </>
   );

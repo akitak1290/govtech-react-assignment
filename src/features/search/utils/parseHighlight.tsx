@@ -19,3 +19,4 @@ export function parseHighlightText(documentText: DocumentText) {
 
   return <p>{...parsedText}</p>;
 }
+

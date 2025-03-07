@@ -18,6 +18,8 @@ function SearchInput(props: PropType) {
   const [searchString, setSearchString] = useState("");
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
 
+  const [isFocus, setIsFocus] = useState(false);
+
   const { data: suggestions, loading } = useFetchSuggestionResult(searchString);
 
   const onInputChange = function (e: React.ChangeEvent<HTMLInputElement>) {
@@ -92,6 +94,9 @@ function SearchInput(props: PropType) {
           value={searchString}
           onChange={onInputChange}
           onKeyDown={onKeyDown}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          className="rounded-r-none"
         />
         {searchString.length > 0 && (
           <button
@@ -125,7 +130,7 @@ function SearchInput(props: PropType) {
           </ul>
         )}
       </div>
-      <Button type="submit">
+      <Button type="submit" className={`rounded-l-none ${isFocus ? "ring-1 ring-blue-500 border-blue-500 outline-none" : ""}`}>
         <SearchIcon />
         Search
       </Button>
