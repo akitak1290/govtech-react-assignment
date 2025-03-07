@@ -40,7 +40,12 @@ export interface SuggestionResult {
   synonyms: Synonym;
 }
 
+export interface ParsedSuggestionResult {
+  suggestions: string[];
+  synonymSuggestions: string[] | null;
+}
+
 export interface SuggestionResultWrapper {
-  data: string[] | null;
+  data: ParsedSuggestionResult | null;
   error: string | null;
 }
