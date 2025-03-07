@@ -12,7 +12,7 @@ function SearchResult(props: PropType) {
 
   return (
     <>
-      {error && <span className="w-full flex justify-center">{error}</span>}
+      {error && <span aria-label="search-result-error" className="w-full flex justify-center">{error}</span>}
       {loading && (
         <span className="w-full flex justify-center">
           <Spinner />
@@ -26,7 +26,7 @@ function SearchResult(props: PropType) {
           </p>
           <ul>
             {data.ResultItems.map((result, index) => (
-              <li key={index} className="mb-12 *:my-3">
+              <li key={index} aria-label="search-result-item" className="mb-12 *:my-3">
                 <a
                   className="text-[#1C76D5] text-xl font-medium"
                   href={result.DocumentURI}

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import SearchInput from "./SearchInput";
@@ -86,6 +86,9 @@ describe(SearchInput, () => {
 
     fireEvent.keyDown(input, { key: "Enter" });
     expect(input).toHaveValue("apple");
+    
+    expect(listItems[0]).not.toBeVisible();
+    expect(onSubmitMock).toHaveBeenCalled();
   });
 
   it("should update input field, hide suggestion list, and update searchResult", async () => {
@@ -103,5 +106,40 @@ describe(SearchInput, () => {
     fireEvent.click(screen.getByText(/Search/i));
     expect(listItems[0]).not.toBeVisible();
     expect(onSubmitMock).toHaveBeenCalled();
+  });
+
+  it("input field should be updated when a suggestion is clicked", async () => {
+    (useFetchSuggestionResult as jest.Mock).mockReturnValue({
+      data: ["apple", "banana", "cherry"],
+    });
+
+    render(<SearchInput onSubmit={onSubmitMock} />);
+    const input = screen.getByLabelText("search-input");
+
+    await userEvent.type(input, "app");
+    const listItems = screen.getAllByRole("listitem");
+    expect(listItems[0]).toHaveTextContent("apple");
+
+    fireEvent.mouseOver(listItems[1]);
+    expect(listItems[1]).toHaveClass("bg-blue-100");
+
+    fireEvent.click(listItems[1]);
+    expect(input).toHaveValue("banana");
+  });
+
+  it("should update style for button when in/out of focus", async () => {
+    render(<SearchInput onSubmit={onSubmitMock} />);
+    const input = screen.getByLabelText("search-input");
+    const button = screen.getByRole("button", { name: /search/i });
+
+    await waitFor(() => {
+      input.focus();
+      expect(button).toHaveClass("ring-1");
+    });
+
+    await waitFor(() => {
+      input.blur();
+      expect(button).not.toHaveClass("ring-1");
+    });
   });
 });
