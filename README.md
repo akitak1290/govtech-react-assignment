@@ -2,7 +2,7 @@
 
 A search portal SPA that allows users to search for information on the Government of Singapore's website.
 
-This is a submisson for the [GovTech's 2025 assignment](https://gist.github.com/yuhong90/b5544baebde4bfe9fe2d12e8e5502cbf).
+This is a submission for the [GovTech's 2025 assignment](https://gist.github.com/yuhong90/b5544baebde4bfe9fe2d12e8e5502cbf).
 
 ## 💻 Table of Contents
 
@@ -12,6 +12,7 @@ This is a submisson for the [GovTech's 2025 assignment](https://gist.github.com/
 - 🧪 [Run Unit Tests](#🧪-run-unit-tests)
 - 🧱 [Technologies Used](#🧱-technologies-used)
 - 📷 [Preview](#📷-preview)
+- 📝 [Assumptions](#📝-assumptions)
 
 ## 🗄️ Project Structure
 
@@ -63,6 +64,8 @@ Open your browser and go to http://localhost:5173 (vite serves the app by defaul
 npm run test
 ```
 
+![test coverage](./docs/test-cov.png)
+
 Test library used:
 
 - [Jest](https://jestjs.io/)
@@ -75,3 +78,15 @@ Test library used:
 - **Testing tool**: React Testing Library, Jest
 
 ## 📷 Preview
+- **Web view**\
+![search input](./docs/search-typeahead.png)
+![search result](./docs/search-result.png)
+- **Mobile view**\
+![search input](./docs/search-typeahead-mobile.png)
+![search result](./docs/search-result-mobile.png)
+- **Network error**\
+![network error](./docs/network-error.png)
+
+## 📝 Assumptions
+- Each suggestion needs to highlights all words in the search string individually.
+- The mock data for query result only highlights the word 'child'. An additional filter has been added to dynamically change the highlights array to match the actual search word.
