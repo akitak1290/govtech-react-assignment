@@ -1,6 +1,6 @@
 import Spinner from "@/components/Spinner";
 import { useFetchQueryResult } from "../api/getQueryResult";
-import { parseHighlightText } from "../utils/parseHighlight";
+import { highlightQueryResult } from "../utils/parseHighlight";
 
 type PropType = {
   searchString: string;
@@ -32,9 +32,9 @@ function SearchResult(props: PropType) {
                   href={result.DocumentURI}
                   target="_blank"
                 >
-                  {parseHighlightText(result.DocumentTitle)}
+                  {highlightQueryResult(result.DocumentTitle)}
                 </a>
-                <span>{parseHighlightText(result.DocumentExcerpt)}</span>
+                <span>{highlightQueryResult(result.DocumentExcerpt)}</span>
                 <a
                   className="text-[#686868]"
                   target="_blank"

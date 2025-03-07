@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import SearchIcon from "./SearchIcon";
 import useFetchSuggestionResult from "../api/getSuggestionResult";
 import Spinner from "@/components/Spinner";
+import { highlightSuggestion } from "../utils/parseHighlight";
 
 type PropType = {
   onSubmit: (newSearchString: string) => void;
@@ -109,7 +110,7 @@ function SearchInput(props: PropType) {
           </button>
         )}
         {loading && (
-          <span className="absolute inset-y-0 right-9 flex items-center justify-center">
+          <span className="absolute inset-y-0 right-12 flex items-center justify-center">
             <Spinner />
           </span>
         )}
@@ -124,13 +125,18 @@ function SearchInput(props: PropType) {
                 onClick={() => onClickSuggestion(suggestion)}
                 onMouseOver={() => setSuggestionIndex(index)}
               >
-                {suggestion}
+                {highlightSuggestion(suggestion, searchString)}
               </li>
             ))}
           </ul>
         )}
       </div>
-      <Button type="submit" className={`rounded-l-none ${isFocus ? "ring-1 ring-blue-500 border-blue-500 outline-none" : ""}`}>
+      <Button
+        type="submit"
+        className={`rounded-l-none ${
+          isFocus ? "ring-1 ring-blue-500 border-blue-500 outline-none" : ""
+        }`}
+      >
         <SearchIcon />
         Search
       </Button>
