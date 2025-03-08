@@ -15,19 +15,19 @@ function SearchInput(props: PropType) {
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const [showTypeahead, setShowTypeahead] = useState(true);
+  const [showTypeahead, setShowTypeahead] = useState(false);
   const [searchString, setSearchString] = useState("");
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
 
   const [isFocus, setIsFocus] = useState(false);
 
-  const { data: suggestions, loading } = useFetchSuggestionResult(searchString);
+  const { data, loading } = useFetchSuggestionResult(searchString);
+  const { suggestions, synonymSuggestions } = data || {};
 
   const onInputChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     setSearchString(e.target.value);
     setSuggestionIndex(-1);
-
-    if (suggestions) setShowTypeahead(true);
+    setShowTypeahead(true);
   };
 
   const onKeyDown = function (e: React.KeyboardEvent<HTMLElement>) {
@@ -97,7 +97,7 @@ function SearchInput(props: PropType) {
           onKeyDown={onKeyDown}
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
-          className="rounded-r-none"
+          className={`rounded-r-none`}
         />
         {searchString.length > 0 && (
           <button
@@ -124,21 +124,41 @@ function SearchInput(props: PropType) {
                 }`}
                 onClick={() => onClickSuggestion(suggestion)}
                 onMouseOver={() => setSuggestionIndex(index)}
+                onMouseLeave={() => setSuggestionIndex(-1)}
               >
                 {highlightSuggestion(suggestion, searchString)}
               </li>
             ))}
+            {synonymSuggestions && (
+              <span>
+                <hr className="w-[98%] m-auto my-3 border-gray-300" />
+                <p className="px-4 text-gray-500">related results</p>
+                <ul className="flex flex-wrap gap-3 px-4 pt-3 pb-6">
+                  {synonymSuggestions.slice(0, 7).map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py3 bg-gray-200 rounded-lg hover:cursor-pointer hover:bg-gray-300"
+                      onClick={() => onClickSuggestion(suggestion)}
+                    >
+                      {suggestion.length > 30
+                        ? `${suggestion.slice(0, 30)}...`
+                        : suggestion}
+                    </li>
+                  ))}
+                </ul>
+              </span>
+            )}
           </ul>
         )}
       </div>
       <Button
         type="submit"
-        className={`rounded-l-none ${
+        className={`rounded-l-none items-center ${
           isFocus ? "ring-1 ring-blue-500 border-blue-500 outline-none" : ""
         }`}
       >
         <SearchIcon />
-        Search
+        <span className="hidden sm:inline">Search</span>
       </Button>
     </form>
   );

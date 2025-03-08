@@ -82,11 +82,12 @@ Test library used:
 ![search input](./docs/search-typeahead.png)
 ![search result](./docs/search-result.png)
 - **Mobile view**\
-![search input](./docs/search-typeahead-mobile.png)
-![search result](./docs/search-result-mobile.png)
+![search input](./docs/search-typeahead-mobile.png)\
+![search result](./docs/search-result-mobile.png)\
 - **Network error**\
 ![network error](./docs/network-error.png)
 
 ## 📝 Assumptions
 - Each suggestion needs to highlights all words in the search string individually.
 - The mock data for query result only highlights the word 'child'. An additional filter has been added to dynamically change the highlights array to match the actual search word.
+- If a user search has multiple words and they all have synonyms, only the synonyms of the first word is used to generate the extra suggestion list. This is to keep things simple.

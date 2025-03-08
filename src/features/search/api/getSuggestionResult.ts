@@ -1,11 +1,36 @@
 import { useEffect, useState } from "react";
 
 import { suggestionEndpoint as mockSuggestionEndpoint } from "@/mock/api.mock";
-import { SuggestionResult, SuggestionResultWrapper } from "@/utils/interface";
+import {
+  ParsedSuggestionResult,
+  SuggestionResult,
+  SuggestionResultWrapper,
+} from "@/utils/interface";
 import { FETCH_NO_DATA_FOUND, FETCH_RETURN_NOT_OK } from "@/utils/constant";
 import { useError } from "@/hooks/useError";
 
 const suggestionEndpoint = mockSuggestionEndpoint;
+
+function findFromSynonym(
+  searchWords: string[],
+  suggestions: string[],
+  synonyms: Record<string, string[]>
+) {
+  let result: Record<string, string[]> = {};
+  searchWords.forEach((word) => {
+    if (word in synonyms) {
+      result[word] = [];
+      synonyms[word].forEach((synonym) => {
+        result[word].push(
+          ...suggestions.filter((suggestion) => suggestion.includes(synonym))
+        );
+      });
+    }
+  });
+
+  // ! to simplify the logic, only return the first word that has synonym
+  return Object.values(result).find((array) => array.length > 0);
+}
 
 export async function fetchSuggestionResult(
   searchString: string
@@ -37,7 +62,14 @@ export async function fetchSuggestionResult(
     suggestions.sort((a, b) => data.suggestions[b] - data.suggestions[a]);
 
     return {
-      data: suggestions,
+      data: {
+        suggestions,
+        synonymSuggestions: findFromSynonym(
+          searchWords,
+          Object.keys(data.suggestions),
+          data.synonyms
+        ) || null,
+      },
       error: null,
     };
   } catch (error) {
@@ -49,7 +81,7 @@ export async function fetchSuggestionResult(
 }
 
 export default function useFetchSuggestionResult(searchString: string) {
-  const [data, setData] = useState<string[] | null>(null);
+  const [data, setData] = useState<ParsedSuggestionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const { error, setError, clearError } = useError();
 
@@ -75,7 +107,9 @@ export default function useFetchSuggestionResult(searchString: string) {
       clearError();
       setLoading(true);
 
-      const { data, error } = await fetchSuggestionResult(searchStringDebounced);
+      const { data, error } = await fetchSuggestionResult(
+        searchStringDebounced
+      );
       if (error) {
         setError(error);
       } else {

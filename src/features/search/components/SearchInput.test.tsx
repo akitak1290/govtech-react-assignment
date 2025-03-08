@@ -15,7 +15,7 @@ describe(SearchInput, () => {
   beforeEach(() => {
     onSubmitMock = jest.fn();
     (useFetchSuggestionResult as jest.Mock).mockResolvedValue({
-      data: [],
+      data: {},
       loading: false,
     });
   });
@@ -69,7 +69,10 @@ describe(SearchInput, () => {
 
   it("should be able to handle keyboard navigation (ArrowDown, ArrowUp, Enter)", async () => {
     (useFetchSuggestionResult as jest.Mock).mockReturnValue({
-      data: ["apple", "banana", "cherry"],
+      data: {
+        suggestions: ["apple", "banana", "cherry"],
+        synonymSuggestions: null,
+      },
     });
 
     render(<SearchInput onSubmit={onSubmitMock} />);
@@ -86,14 +89,17 @@ describe(SearchInput, () => {
 
     fireEvent.keyDown(input, { key: "Enter" });
     expect(input).toHaveValue("apple");
-    
+
     expect(listItems[0]).not.toBeVisible();
     expect(onSubmitMock).toHaveBeenCalled();
   });
 
   it("should update input field, hide suggestion list, and update searchResult", async () => {
     (useFetchSuggestionResult as jest.Mock).mockReturnValue({
-      data: ["apple", "banana", "cherry"],
+      data: {
+        suggestions: ["apple", "banana", "cherry"],
+        synonymSuggestions: null,
+      },
     });
 
     render(<SearchInput onSubmit={onSubmitMock} />);
@@ -110,7 +116,10 @@ describe(SearchInput, () => {
 
   it("input field should be updated when a suggestion is clicked", async () => {
     (useFetchSuggestionResult as jest.Mock).mockReturnValue({
-      data: ["apple", "banana", "cherry"],
+      data: {
+        suggestions: ["apple", "banana", "cherry"],
+        synonymSuggestions: null,
+      },
     });
 
     render(<SearchInput onSubmit={onSubmitMock} />);

@@ -20,7 +20,7 @@ describe("fetchSuggestionResult", () => {
         blueberry: 4,
         apple: 100,
       },
-      synonyms: { apple: "red slightly round fruit" },
+      synonyms: { apple: ["red slightly round fruit"] },
     };
 
     (fetch as jest.Mock).mockResolvedValue({
@@ -30,7 +30,10 @@ describe("fetchSuggestionResult", () => {
 
     const result = await fetchSuggestionResult("apple bee");
 
-    expect(result.data).toEqual(["apple bee fox", "apple bee"]);
+    expect(result.data).toEqual({
+      suggestions: ["apple bee fox", "apple bee"],
+      synonymSuggestions: null,
+    });
     expect(result.error).toBeNull();
   });
 
@@ -80,7 +83,7 @@ describe("useFetchSuggestionResult", () => {
         blueberry: 4,
         apple: 100,
       },
-      synonyms: { apple: "red slightly round fruit" },
+      synonyms: { apple: ["red slightly round fruit"] },
     };
 
     (fetch as jest.Mock).mockResolvedValue({
@@ -92,7 +95,10 @@ describe("useFetchSuggestionResult", () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    expect(result.current.data).toEqual(["apple bee fox", "apple bee"]);
+    expect(result.current.data).toEqual({
+      suggestions: ["apple bee fox", "apple bee"],
+      synonymSuggestions: null,
+    });
     expect(result.current.error).toBe(null);
   });
 
@@ -135,7 +141,7 @@ describe("useFetchSuggestionResult", () => {
         blueberry: 4,
         apple: 100,
       },
-      synonyms: { apple: "red slightly round fruit" },
+      synonyms: { apple: ["red slightly round fruit"] },
     };
 
     (fetch as jest.Mock).mockResolvedValue({
@@ -159,11 +165,10 @@ describe("useFetchSuggestionResult", () => {
     });
 
     await waitFor(() => {
-      expect(result.current.data).toEqual([
-        "apple",
-        "apple bee fox",
-        "apple bee",
-      ]);
+      expect(result.current.data).toEqual({
+        suggestions: ["apple", "apple bee fox", "apple bee"],
+        synonymSuggestions: null,
+      });
     });
   });
 });
