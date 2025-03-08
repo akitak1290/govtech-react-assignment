@@ -18,20 +18,28 @@ export function highlightQueryResult(documentText: DocumentText) {
   if (cur < text.length) parsedText.push(text.substring(cur));
 
   return <p>{...parsedText}</p>;
-
 }
 
-export function highlightSuggestion(text: string, searchString: string) {
-  const searchWords = searchString.trim().split(/\s+/g);
-  let result = text;
+export function highlightSuggestion(suggestion: string, searchString: string) {
+  const searchWords = searchString.toLowerCase().trim().split(/\s+/); 
+  const suggestionWords = suggestion.trim().split(/\s+/);
 
-  // ASSUMPTIONS
-  // should be case-insensitive for a more robust result
-  // should only match the start of a word, not the middle
-  searchWords.forEach((word) => {
-    const regex = new RegExp(`\\b(${word})`, "gi");
-    result = result.replace(regex, `<b>$1</b>`);
+  const highlightedText = suggestionWords.map((word, index) => {
+    const lowerWord = word.toLowerCase();
+    const match = searchWords.find((term) => lowerWord.startsWith(term));
+
+    if (match) {
+      return (
+        <span key={index}>
+          <span className="font-semibold">{word.substring(0, match.length)}</span>
+          {word.substring(match.length)}{" "}
+        </span>
+      );
+    }
+
+    return <span key={index}>{word} </span>;
   });
 
-  return <span dangerouslySetInnerHTML={{ __html: result }} />;
+
+  return <div>{highlightedText}</div>;
 }
