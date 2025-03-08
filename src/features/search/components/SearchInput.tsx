@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import SearchIcon from "./SearchIcon";
@@ -24,13 +24,10 @@ function SearchInput(props: PropType) {
   const { data, loading } = useFetchSuggestionResult(searchString);
   const { suggestions, synonymSuggestions } = data || {};
 
-  useEffect(() => {
-    if (data) setShowTypeahead(true);
-  }, [data]);
-
   const onInputChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     setSearchString(e.target.value);
     setSuggestionIndex(-1);
+    setShowTypeahead(true);
   };
 
   const onKeyDown = function (e: React.KeyboardEvent<HTMLElement>) {
