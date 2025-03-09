@@ -57,18 +57,22 @@ export async function fetchSuggestionResult(
     const searchWords = searchString.trim().split(/\s+/g);
     let suggestions = Object.keys(data.suggestions);
     suggestions = suggestions.filter((suggestion) =>
-      searchWords.every((word) => suggestion.toLowerCase().includes(word))
+      searchWords.every((word) =>
+        // suggestion.toLowerCase().includes(word)
+        new RegExp(`\\b${word.toLowerCase()}`).test(suggestion.toLowerCase())
+      )
     );
     suggestions.sort((a, b) => data.suggestions[b] - data.suggestions[a]);
 
     return {
       data: {
         suggestions,
-        synonymSuggestions: findFromSynonym(
-          searchWords,
-          Object.keys(data.suggestions),
-          data.synonyms
-        ) || null,
+        synonymSuggestions:
+          findFromSynonym(
+            searchWords,
+            Object.keys(data.suggestions),
+            data.synonyms
+          ) || null,
       },
       error: null,
     };
