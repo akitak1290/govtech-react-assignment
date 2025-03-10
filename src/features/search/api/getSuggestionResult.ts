@@ -64,15 +64,23 @@ export async function fetchSuggestionResult(
     );
     suggestions.sort((a, b) => data.suggestions[b] - data.suggestions[a]);
 
+    let synonymSuggestions =
+      findFromSynonym(
+        searchWords,
+        Object.keys(data.suggestions),
+        data.synonyms
+      ) || null;
+
+    if (synonymSuggestions) {
+      synonymSuggestions = synonymSuggestions.filter((suggestion) => {
+        return !suggestions.includes(suggestion);
+      });
+    }
+
     return {
       data: {
         suggestions,
-        synonymSuggestions:
-          findFromSynonym(
-            searchWords,
-            Object.keys(data.suggestions),
-            data.synonyms
-          ) || null,
+        synonymSuggestions,
       },
       error: null,
     };

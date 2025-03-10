@@ -37,6 +37,31 @@ describe("fetchSuggestionResult", () => {
     expect(result.error).toBeNull();
   });
 
+  it("should exclude synonym suggestion if already exist in main suggestions", async () => {
+    const mockResponse = {
+      suggestions: {
+        "apple bee": 1,
+        banana: 2,
+        "apple bee fox": 3,
+        blueberry: 4,
+        apple: 100,
+      },
+      synonyms: { apple: ["red slightly round fruit, apple bee"] },
+    };
+
+    (fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue(mockResponse),
+    });
+
+    const result = await fetchSuggestionResult("apple bee");
+
+    expect(result.data).toEqual({
+      suggestions: ["apple bee fox", "apple bee"],
+      synonymSuggestions: null,
+    });
+  });
+
   it("should be able to handle failed API response", async () => {
     (fetch as jest.Mock).mockResolvedValue({
       ok: false,
