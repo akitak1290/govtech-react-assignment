@@ -3,7 +3,7 @@ name: Upload to S3 static bucket
 on:
   push:
     branches:
-      - aws-deployment
+      - main
 
 jobs:
   deploy:
