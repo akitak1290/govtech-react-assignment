@@ -6,6 +6,7 @@ This is a submission for the [GovTech's 2025 assignment](https://gist.github.com
 
 ## 💻 Table of Contents
 
+- 🔗 [Deployments](#🔗-deployments)
 - 🗄️ [Project Structure](#🗄️-project-structure)
 - ⚙️ [Installation](#⚙️-installation)
 - 🚄 [Run the App](#🚄-run-the-app)
@@ -13,6 +14,15 @@ This is a submission for the [GovTech's 2025 assignment](https://gist.github.com
 - 🧱 [Technologies Used](#🧱-technologies-used)
 - 📷 [Preview](#📷-preview)
 - 📝 [Assumptions](#📝-assumptions)
+
+## 🔗 Deployments
+
+### AWS
+The project has a [github workflow](.github/workflows/deploy.yml) to build the latest changes and to push the built to a private S3 bucket. A Cloudfront distribution, with OAC linked to the bucket, serves the content globally: 
+[Distribution Domain Name 🔗](https://degqb4te2sv84.cloudfront.net/)
+
+### (Fallback) Vercel
+ [Vercel Domain Name 🔗](https://govtech-react-assignment.vercel.app/) ( Vercel has a cold-start phase so the project may take a minute to be ready)
 
 ## 🗄️ Project Structure
 
